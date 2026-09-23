@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://rxtntyunak7c"]
+
+[ext_resource type="Texture2D" uid="uid://cbgr4xxdy06jk" path="res://brown-horse-run-gallop-isolated-png-2872242320.png" id="1_12aib"]
+[ext_resource type="Script" uid="uid://de6o001bgtvha" path="res://objects/Horse.cs" id="1_aqg8h"]
+
+[node name="Horse" type="Node2D" unique_id=861148446]
+script = ExtResource("1_aqg8h")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1726912467]
+position = Vector2(95.99999, 91.99999)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_12aib")

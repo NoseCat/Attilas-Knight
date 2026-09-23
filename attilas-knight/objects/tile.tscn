@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://n085tornqdjj"]
+
+[ext_resource type="Script" uid="uid://darnf0rxl2os4" path="res://objects/Tile.cs" id="1_os0ok"]
+
+[node name="Tile" type="Node2D" unique_id=1177855444]
+script = ExtResource("1_os0ok")
+DarkColor = Color(0.2885062, 0.47931093, 0.96545655, 1)
+Fire = Color(0.9999998, 0.4372971, 0.22957194, 1)
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=699481359]
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.14710009, 0.22832128, 0.5413587, 1)

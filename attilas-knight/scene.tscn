@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://b8sg4gni356ia"]
+
+[ext_resource type="Script" uid="uid://dkg05wvfj645h" path="res://scene.gd" id="1_nxogm"]
+[ext_resource type="PackedScene" uid="uid://ck24udt2ayume" path="res://objects/field.tscn" id="2_nxogm"]
+
+[node name="Scene" type="Node2D" unique_id=388929535]
+script = ExtResource("1_nxogm")
+
+[node name="FieldOrigin" type="Node2D" parent="." unique_id=1976101696]
+position = Vector2(160, 65)
+
+[node name="FieldEdge" type="Node2D" parent="FieldOrigin" unique_id=504208491]
+position = Vector2(811, 485)
+
+[node name="Field" parent="FieldOrigin" unique_id=880850480 instance=ExtResource("2_nxogm")]
+SpaceSize = Vector2(811, 485)
