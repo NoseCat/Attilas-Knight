@@ -3,12 +3,20 @@
 [ext_resource type="Script" uid="uid://dkg05wvfj645h" path="res://scene.gd" id="1_nxogm"]
 [ext_resource type="PackedScene" uid="uid://ck24udt2ayume" path="res://objects/field.tscn" id="2_nxogm"]
 [ext_resource type="PackedScene" uid="uid://rxtntyunak7c" path="res://objects/horse.tscn" id="3_3253y"]
+[ext_resource type="PackedScene" uid="uid://dwgyaotcpxt01" path="res://objects/king.tscn" id="4_u3cyc"]
 
 [node name="Scene" type="Node2D" unique_id=388929535]
 script = ExtResource("1_nxogm")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1244582926]
+offset_right = 1163.0
+offset_bottom = 661.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+color = Color(0.36078432, 0.2, 0.09019608, 1)
+
 [node name="FieldOrigin" type="Node2D" parent="." unique_id=1976101696]
-position = Vector2(160, 65)
+position = Vector2(236, 65)
 
 [node name="FieldEdge" type="Node2D" parent="FieldOrigin" unique_id=504208491]
 position = Vector2(811, 485)
@@ -16,3 +24,141 @@ position = Vector2(811, 485)
 [node name="Field" parent="FieldOrigin" unique_id=880850480 instance=ExtResource("2_nxogm")]
 
 [node name="Horse" parent="FieldOrigin" unique_id=861148446 instance=ExtResource("3_3253y")]
+
+[node name="King" parent="FieldOrigin" unique_id=1525262968 instance=ExtResource("4_u3cyc")]
+
+[node name="Generate" type="Button" parent="." unique_id=1702187070]
+offset_left = 22.0
+offset_top = 166.0
+offset_right = 136.0
+offset_bottom = 197.0
+text = "Generate Fire"
+
+[node name="Label" type="Label" parent="." unique_id=1569589961]
+offset_left = 90.0
+offset_top = 136.0
+offset_right = 130.0
+offset_bottom = 159.0
+text = "seed"
+
+[node name="Seed" type="LineEdit" parent="." unique_id=206878879]
+offset_left = 16.0
+offset_top = 132.0
+offset_right = 84.5
+offset_bottom = 163.0
+text = "1"
+placeholder_text = "1"
+
+[node name="Label2" type="Label" parent="." unique_id=1070438907]
+offset_left = 90.0
+offset_top = 99.0
+offset_right = 130.0
+offset_bottom = 122.0
+text = "chance"
+
+[node name="Chance" type="LineEdit" parent="." unique_id=1359420613]
+offset_left = 16.0
+offset_top = 96.0
+offset_right = 84.5
+offset_bottom = 127.0
+text = "0.25"
+placeholder_text = "0.25"
+
+[node name="randSeed" type="Button" parent="." unique_id=688070049]
+offset_left = 137.0
+offset_top = 132.0
+offset_right = 222.0
+offset_bottom = 163.0
+text = "rand seed"
+
+[node name="X" type="LineEdit" parent="." unique_id=210373333]
+offset_left = 47.0
+offset_top = 239.0
+offset_right = 115.5
+offset_bottom = 270.0
+text = "15"
+placeholder_text = "15"
+
+[node name="Y" type="LineEdit" parent="." unique_id=1642292904]
+offset_left = 47.0
+offset_top = 279.0
+offset_right = 115.5
+offset_bottom = 310.0
+text = "10"
+placeholder_text = "10"
+
+[node name="Label3" type="Label" parent="." unique_id=1637290512]
+offset_left = 24.0
+offset_top = 240.0
+offset_right = 64.0
+offset_bottom = 263.0
+text = "X:"
+
+[node name="Label4" type="Label" parent="." unique_id=883489462]
+offset_left = 26.0
+offset_top = 283.0
+offset_right = 66.0
+offset_bottom = 306.0
+text = "Y:"
+
+[node name="Create" type="Button" parent="." unique_id=2131613621]
+offset_left = 31.0
+offset_top = 317.0
+offset_right = 129.0
+offset_bottom = 348.0
+text = "Create field"
+
+[node name="HorseManual" type="CheckBox" parent="." unique_id=127734595]
+offset_left = 31.0
+offset_top = 383.0
+offset_right = 55.0
+offset_bottom = 407.0
+
+[node name="Label5" type="Label" parent="." unique_id=1840819133]
+offset_left = 60.0
+offset_top = 383.0
+offset_right = 149.0
+offset_bottom = 406.0
+text = "Place horse"
+
+[node name="KingManual" type="CheckBox" parent="." unique_id=457130840]
+offset_left = 32.0
+offset_top = 450.0
+offset_right = 56.0
+offset_bottom = 474.0
+
+[node name="Label6" type="Label" parent="." unique_id=1182376235]
+offset_left = 61.0
+offset_top = 450.0
+offset_right = 150.0
+offset_bottom = 473.0
+text = "Place king"
+
+[node name="HorseRand" type="Button" parent="." unique_id=1937627923]
+offset_left = 39.0
+offset_top = 410.0
+offset_right = 177.0
+offset_bottom = 441.0
+text = "Place figs rand"
+
+[node name="KingRand" type="Button" parent="." unique_id=1360958752]
+visible = false
+offset_left = 40.0
+offset_top = 480.0
+offset_right = 167.0
+offset_bottom = 511.0
+text = "Place king rand"
+
+[node name="State" type="Label" parent="." unique_id=807154782]
+offset_left = 42.0
+offset_top = 503.0
+offset_right = 82.0
+offset_bottom = 526.0
+text = " "
+
+[connection signal="pressed" from="Generate" to="." method="_on_generate_pressed"]
+[connection signal="pressed" from="randSeed" to="." method="_on_rand_seed_pressed"]
+[connection signal="pressed" from="Create" to="." method="_on_create_pressed"]
+[connection signal="toggled" from="HorseManual" to="." method="_on_horse_manual_toggled"]
+[connection signal="toggled" from="KingManual" to="." method="_on_king_manual_toggled"]
+[connection signal="pressed" from="HorseRand" to="." method="_on_horse_rand_pressed"]

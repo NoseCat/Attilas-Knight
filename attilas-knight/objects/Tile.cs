@@ -1,5 +1,4 @@
 using Godot;
-[Tool] 
 public partial class Tile : Node2D
 {
 	public bool walkable = true;

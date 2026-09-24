@@ -1,5 +1,4 @@
 using Godot;
-[Tool]
 public partial class Field : Node2D
 {
 	public Vector2I GridSize = new Vector2I(10, 10);
@@ -10,28 +9,12 @@ public partial class Field : Node2D
 	Vector2 TileSize;
 
 	public Horse horse;
+	public King king;
 	public override void _Ready()
 	{
 		_tileScene = GD.Load<PackedScene>("res://objects/tile.tscn");
 		horse = GetNode<Horse>("../Horse");
-	}
-
-	private bool _rebuild;
-	[Export]
-	public bool Rebuild
-	{
-		get => _rebuild;
-		set
-		{
-			_rebuild = false;            // button-style toggle
-			if (Engine.IsEditorHint())
-			{
-				_tileScene = GD.Load<PackedScene>("res://objects/tile.tscn");
-				SpaceSize = GetNode<Node2D>("../FieldEdge").Position;
-				Create(10,10);
-			}
-
-		}
+		king = GetNode<King>("../King");
 	}
 
 //field creation
@@ -65,17 +48,18 @@ public partial class Field : Node2D
 		}
 	}
 
-	public void SetRandOnFire(float chance)
+	public void SetRandOnFire(float chance, int seed)
 	{
 		var rng = new RandomNumberGenerator();
-		rng.Randomize();
+		rng.Seed = (ulong)seed;
+		//rng.Randomize();
 
 		for (int y = 0; y < GridSize.Y; y++)
 		{
 			for (int x = 0; x < GridSize.X; x++)
 			{
 				tiles[x, y].setClear();
-				if (rng.RandiRange(0, 100) < chance * 100) //100 should be rand precision
+				if (rng.RandiRange(0, 100) <= chance * 100) //100 should be rand precision
 				{
 					tiles[x, y].setFire();
 				}
@@ -109,11 +93,17 @@ public partial class Field : Node2D
 		return new Vector2I(-1,-1);
 	}
 
+	[Signal]
+	public delegate void TilePressedEventHandler(Vector2I gridPos);
+
 	public override void _Process(double delta)
 	{
 		//GD.Print(find_selected());
 		horse.Position = horse.grid_pos * TileSize;
 		horse.SetSize(TileSize);
+
+		king.Position = king.grid_pos * TileSize;
+		king.SetSize(TileSize);
 
 		highlight_legal();
 
@@ -122,6 +112,8 @@ public partial class Field : Node2D
 			var pos = find_selected();
 			if (pos.X != -1)
 			{
+				EmitSignal(SignalName.TilePressed, pos);
+
 				var prev_pos = horse.grid_pos;
 				bool move_success = try_move(pos);
 				if(move_success)
@@ -138,6 +130,16 @@ public partial class Field : Node2D
 		for (int y = 0; y < GridSize.Y; y++)
 			for (int x = 0; x < GridSize.X; x++)
 				tiles[x,y].clearColor();
+	}
+
+	public int legal_count()
+	{
+		var count = 0;
+		for (int y = 0; y < GridSize.Y; y++)
+			for (int x = 0; x < GridSize.X; x++)
+				if(tiles[x,y].walkable && horse.Legal(new Vector2I(x,y)))
+					count++;
+		return count;
 	}
 
 	public void highlight_legal()
@@ -170,5 +172,6 @@ public partial class Field : Node2D
 		}
 		return false;
 	}
+
 
 }
