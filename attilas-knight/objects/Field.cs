@@ -3,14 +3,17 @@ using Godot;
 public partial class Field : Node2D
 {
 	public Vector2I GridSize = new Vector2I(10, 10);
-	[Export] public Vector2 SpaceSize = new Vector2(0, 0);
+	public Vector2 SpaceSize = new Vector2(0, 0);
 
 	private PackedScene _tileScene;
 	public Tile[,] tiles;
+	Vector2 TileSize;
+
+	public Horse horse;
 	public override void _Ready()
 	{
 		_tileScene = GD.Load<PackedScene>("res://objects/tile.tscn");
-
+		horse = GetNode<Horse>("../Horse");
 	}
 
 	private bool _rebuild;
@@ -31,6 +34,7 @@ public partial class Field : Node2D
 		}
 	}
 
+//field creation
 	public void Create(int size_x, int size_y)
 	{
 		Reset();
@@ -39,18 +43,24 @@ public partial class Field : Node2D
 
 		tiles = new Tile[GridSize.X, GridSize.Y];
 
-		Vector2 TileSize = SpaceSize / GridSize;
+		TileSize = SpaceSize / GridSize;
 		for (int y = 0; y < GridSize.Y; y++)
 		{
 			for (int x = 0; x < GridSize.X; x++)
 			{
+				//data
 				var tile = _tileScene.Instantiate<Tile>();
 				AddChild(tile);
 				tiles[x, y] = tile;
 
+				//create
 				var TilePos = new Vector2(x * TileSize.X, y * TileSize.Y);
 				tile.Create(TilePos, TileSize);
-				if ((x + y) % 2 == 0) tile.Darken();
+
+				//graphic
+				if ((x + y) % 2 == 0) tile.dark = true;
+				tile.setLabel(x.ToString() + " " + y.ToString());
+				tile.clearColor();
 			}
 		}
 	}
@@ -83,4 +93,82 @@ public partial class Field : Node2D
 			child.QueueFree();
 		}
 	}
+
+//helpers
+	public Tile get_tile(Vector2I pos)
+	{
+		return tiles[pos.X, pos.Y];
+	}
+
+	public Vector2I find_selected()
+	{
+		for (int y = 0; y < GridSize.Y; y++)
+			for (int x = 0; x < GridSize.X; x++)
+				if(tiles[x,y].selected)
+					return new Vector2I(x,y);
+		return new Vector2I(-1,-1);
+	}
+
+	public override void _Process(double delta)
+	{
+		//GD.Print(find_selected());
+		horse.Position = horse.grid_pos * TileSize;
+		horse.SetSize(TileSize);
+
+		highlight_legal();
+
+		if (Input.IsActionJustPressed("LMB"))
+		{
+			var pos = find_selected();
+			if (pos.X != -1)
+			{
+				var prev_pos = horse.grid_pos;
+				bool move_success = try_move(pos);
+				if(move_success)
+				{
+					get_tile(prev_pos).setBlock();
+					clearColor();
+				}
+			}
+		}
+	}
+
+	public void clearColor()
+	{
+		for (int y = 0; y < GridSize.Y; y++)
+			for (int x = 0; x < GridSize.X; x++)
+				tiles[x,y].clearColor();
+	}
+
+	public void highlight_legal()
+	{
+		for (int y = 0; y < GridSize.Y; y++)
+			for (int x = 0; x < GridSize.X; x++)
+				if(tiles[x,y].walkable && horse.Legal(new Vector2I(x,y)))
+					tiles[x,y].setColor(tiles[x,y].SelectColor);
+	}
+
+//horse control
+	public bool check_move(Vector2I new_pos)
+	{
+		if(new_pos.X >= GridSize.X || new_pos.Y >= GridSize.Y || 
+		new_pos.X < 0 || new_pos.Y < 0)
+			return false;
+		
+		if(!get_tile(new_pos).walkable)
+			return false;
+		
+		return horse.Legal(new_pos);
+	}
+
+	public bool try_move(Vector2I new_pos)
+	{
+		if(check_move(new_pos))
+		{
+			horse.set_pos(new_pos);	
+			return true;
+		}
+		return false;
+	}
+
 }

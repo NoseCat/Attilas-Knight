@@ -4,8 +4,11 @@
 
 [node name="Tile" type="Node2D" unique_id=1177855444]
 script = ExtResource("1_os0ok")
-DarkColor = Color(0.2885062, 0.47931093, 0.96545655, 1)
+BaseColor = Color(1, 1, 1, 1)
+SelectColor = Color(0.26013774, 0.7659706, 0.4412638, 1)
 Fire = Color(0.9999998, 0.4372971, 0.22957194, 1)
+Blocked = Color(0.35531357, 0.35531357, 0.3553135, 1)
+tint = 0.15
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=699481359]
 offset_right = 40.0
@@ -13,3 +16,10 @@ offset_bottom = 40.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color(0.14710009, 0.22832128, 0.5413587, 1)
+
+[node name="Label" type="Label" parent="." unique_id=17163513]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[connection signal="mouse_entered" from="ColorRect" to="." method="Selected"]
+[connection signal="mouse_exited" from="ColorRect" to="." method="Unselected"]

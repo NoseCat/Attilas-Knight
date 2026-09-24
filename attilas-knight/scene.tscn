@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dkg05wvfj645h" path="res://scene.gd" id="1_nxogm"]
 [ext_resource type="PackedScene" uid="uid://ck24udt2ayume" path="res://objects/field.tscn" id="2_nxogm"]
+[ext_resource type="PackedScene" uid="uid://rxtntyunak7c" path="res://objects/horse.tscn" id="3_3253y"]
 
 [node name="Scene" type="Node2D" unique_id=388929535]
 script = ExtResource("1_nxogm")
@@ -13,4 +14,5 @@ position = Vector2(160, 65)
 position = Vector2(811, 485)
 
 [node name="Field" parent="FieldOrigin" unique_id=880850480 instance=ExtResource("2_nxogm")]
-SpaceSize = Vector2(811, 485)
+
+[node name="Horse" parent="FieldOrigin" unique_id=861148446 instance=ExtResource("3_3253y")]
