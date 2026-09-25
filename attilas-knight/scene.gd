@@ -7,14 +7,12 @@ var King_pos = Vector2i(0,0)
 @onready var horse = $FieldOrigin/Horse
 @onready var king = $FieldOrigin/King
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	field.SpaceSize = $FieldOrigin/FieldEdge.position
 	field.Create(15, 10)
 	field.SetRandOnFire(0.25, 1)
 	field.TilePressed.connect(_on_tile_pressed)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	$State.text = "none"
 	if field.legal_count() <= 0:
@@ -36,9 +34,11 @@ func _on_create_pressed() -> void:
 
 func reset_horse():
 	horse.set_pos(Horse_pos)
+	field.get_tile(Horse_pos).setClear()
 	
 func reset_king():
 	king.set_pos(King_pos)
+	field.get_tile(King_pos).setClear()
 
 func _on_horse_rand_pressed() -> void:
 	var rng := RandomNumberGenerator.new()
@@ -71,3 +71,19 @@ func _on_horse_manual_toggled(toggled_on: bool) -> void:
 
 func _on_king_manual_toggled(toggled_on: bool) -> void:
 	king_manual = toggled_on
+
+
+func _on_solve_bfs_pressed() -> void:
+	if not field.SolveBFS():
+		print("BFS: no path")
+
+
+func _on_solve_dfs_pressed() -> void:
+	if not field.SolveDFS():
+		print("DFS: no path")
+
+
+func _on_set_pressed() -> void:
+	_on_create_pressed()
+	_on_generate_pressed()
+	_on_horse_rand_pressed()

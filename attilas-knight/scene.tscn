@@ -154,7 +154,29 @@ offset_left = 42.0
 offset_top = 503.0
 offset_right = 82.0
 offset_bottom = 526.0
-text = " "
+text = " none"
+
+[node name="SolveBfs" type="Button" parent="." unique_id=370598572]
+offset_left = 117.0
+offset_top = 552.0
+offset_right = 198.0
+offset_bottom = 583.0
+text = "Solve BFS"
+
+[node name="SolveDfs" type="Button" parent="." unique_id=588867099]
+offset_left = 23.0
+offset_top = 555.0
+offset_right = 104.0
+offset_bottom = 586.0
+text = "Solve DFS"
+
+[node name="set" type="Button" parent="." unique_id=858036709]
+offset_left = 167.0
+offset_top = 205.0
+offset_right = 200.0
+offset_bottom = 236.0
+text = "Set
+"
 
 [connection signal="pressed" from="Generate" to="." method="_on_generate_pressed"]
 [connection signal="pressed" from="randSeed" to="." method="_on_rand_seed_pressed"]
@@ -162,3 +184,6 @@ text = " "
 [connection signal="toggled" from="HorseManual" to="." method="_on_horse_manual_toggled"]
 [connection signal="toggled" from="KingManual" to="." method="_on_king_manual_toggled"]
 [connection signal="pressed" from="HorseRand" to="." method="_on_horse_rand_pressed"]
+[connection signal="pressed" from="SolveBfs" to="." method="_on_solve_bfs_pressed"]
+[connection signal="pressed" from="SolveDfs" to="." method="_on_solve_dfs_pressed"]
+[connection signal="pressed" from="set" to="." method="_on_set_pressed"]

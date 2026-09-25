@@ -26,40 +26,6 @@ public partial class Horse : Node2D
 		return false;
 	}
 
-//get move
-	public Vector2I get_move_UL()
-	{
-		return grid_pos + new Vector2I(-1, -2);
-	}
-	public Vector2I get_move_UR()
-	{
-		return grid_pos + new Vector2I(1, -2);
-	}
-	public Vector2I get_move_RU()
-	{
-		return grid_pos + new Vector2I(2, -1);
-	}
-	public Vector2I get_move_RD()
-	{
-		return grid_pos + new Vector2I(2, 1);
-	}
-	public Vector2I get_move_DR()
-	{
-		return grid_pos + new Vector2I(1, 2);
-	}
-	public Vector2I get_move_DL()
-	{
-		return grid_pos + new Vector2I(-1, 2);
-	}
-	public Vector2I get_move_LD()
-	{
-		return grid_pos + new Vector2I(-2, 1);
-	}
-	public Vector2I get_move_LU()
-	{
-		return grid_pos + new Vector2I(-2, -1);
-	}
-
 //graphics
 	public void SetSize(Vector2 size)
 	{

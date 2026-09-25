@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 public partial class Field : Node2D
 {
 	public Vector2I GridSize = new Vector2I(10, 10);
@@ -9,6 +10,19 @@ public partial class Field : Node2D
 	Vector2 TileSize;
 
 	public Horse horse;
+	private bool _solving = false;
+
+	private static readonly Vector2I[] KnightMoves = new Vector2I[]
+	{
+		new Vector2I( 2,  1),
+		new Vector2I( 1,  2),
+		new Vector2I(-1,  2),
+		new Vector2I(-2,  1),
+		new Vector2I(-2, -1),
+		new Vector2I(-1, -2),
+		new Vector2I( 1, -2),
+		new Vector2I( 2, -1),
+	};
 	public King king;
 	public override void _Ready()
 	{
@@ -107,6 +121,9 @@ public partial class Field : Node2D
 
 		highlight_legal();
 
+		if (_solving)
+			return;
+
 		if (Input.IsActionJustPressed("LMB"))
 		{
 			var pos = find_selected();
@@ -173,5 +190,178 @@ public partial class Field : Node2D
 		return false;
 	}
 
+//solvers
+	public bool SolveBFS()
+	{
+		if (_solving)
+			return true;
+
+		var path = FindPathBFS();
+		if (path == null)
+			return false;
+
+		_solving = true;
+		FollowPath(path);
+		return true;
+	}
+
+	public bool SolveDFS()
+	{
+		if (_solving)
+			return true;
+
+		var path = FindPathDFS();
+		if (path == null)
+			return false;
+
+		_solving = true;
+		FollowPath(path);
+		return true;
+	}
+
+// BFS
+	public List<Vector2I> FindPathBFS()
+	{
+		var start = horse.grid_pos;
+		var goal = king.grid_pos;
+
+		if (start == goal)
+			return new List<Vector2I> { start };
+
+		var queue = new Queue<Vector2I>();
+		var visited = new HashSet<Vector2I>();
+		var cameFrom = new Dictionary<Vector2I, Vector2I>();
+
+		queue.Enqueue(start);
+		visited.Add(start);
+
+		while (queue.Count > 0)
+		{
+			var cur = queue.Dequeue();
+
+			foreach (var move in KnightMoves)
+			{
+				var next = cur + move;
+
+				if (!IsInside(next)) //Is next tile inside grid?
+					continue;
+
+				if (visited.Contains(next)) //Is next tile already visited?
+					continue;
+
+				if (!tiles[next.X, next.Y].walkable) //Is next tile on fire?
+					continue;
+
+				visited.Add(next);
+				cameFrom[next] = cur;
+
+				if (next == goal)
+					return ReconstructPath(cameFrom, start, goal);
+
+				queue.Enqueue(next);
+			}
+		}
+
+		return null;
+	}
+
+// DFS
+	public List<Vector2I> FindPathDFS()
+	{
+		var start = horse.grid_pos;
+		var goal = king.grid_pos;
+
+		if (start == goal)
+			return new List<Vector2I> { start };
+
+		var stack = new Stack<Vector2I>();
+		var visited = new HashSet<Vector2I>();
+		var cameFrom = new Dictionary<Vector2I, Vector2I>();
+
+		stack.Push(start);
+		visited.Add(start);
+
+		while (stack.Count > 0)
+		{
+			var cur = stack.Pop();
+
+			// Push in reverse
+			for (int i = KnightMoves.Length - 1; i >= 0; i--)
+			{
+				var next = cur + KnightMoves[i];
+
+				if (!IsInside(next))
+					continue;
+
+				if (visited.Contains(next))
+					continue;
+
+				if (!tiles[next.X, next.Y].walkable)
+					continue;
+
+				visited.Add(next);
+				cameFrom[next] = cur;
+
+				if (next == goal)
+					return ReconstructPath(cameFrom, start, goal);
+
+				stack.Push(next);
+			}
+		}
+
+		return null;
+	}
+
+// Helpers
+	private bool IsInside(Vector2I p)
+	{
+		return p.X >= 0 && p.Y >= 0 && p.X < GridSize.X && p.Y < GridSize.Y;
+	}
+
+	private List<Vector2I> ReconstructPath(Dictionary<Vector2I, Vector2I> cameFrom, Vector2I start, Vector2I goal)
+	{
+		var path = new List<Vector2I>();
+		var cur = goal;
+
+		while (cur != start)
+		{
+			path.Add(cur);
+
+			if (!cameFrom.TryGetValue(cur, out var prev))
+				return null;
+
+			cur = prev;
+		}
+
+		path.Add(start);
+		path.Reverse();
+		return path;
+	}
+
+// Animation
+	private async void FollowPath(List<Vector2I> path)
+	{
+		try
+		{
+			for (int i = 1; i < path.Count; i++)
+			{
+				var prev = path[i - 1];
+				var next = path[i];
+
+				horse.set_pos(next);
+
+				if (IsInside(prev))
+					get_tile(prev).setBlock();
+
+				clearColor();
+
+				await ToSignal(GetTree().CreateTimer(0.25), SceneTreeTimer.SignalName.Timeout);
+			}
+		}
+		finally
+		{
+			_solving = false;
+		}
+	}
 
 }
