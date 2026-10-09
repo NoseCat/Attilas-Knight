@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dwgyaotcpxt01"]
+
+[ext_resource type="Script" uid="uid://shflxta2y662" path="res://Scripts/Board/Piece.cs" id="1_n3uat"]
+[ext_resource type="Texture2D" uid="uid://cs82ni02rj1nc" path="res://king.png" id="2_i7kwa"]
+
+[node name="King" type="Node2D" unique_id=1525262968]
+script = ExtResource("1_n3uat")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=856300582]
+position = Vector2(-6, -8.411122)
+scale = Vector2(0.1640625, 0.17775469)
+texture = ExtResource("2_i7kwa")
+offset = Vector2(320, 240)

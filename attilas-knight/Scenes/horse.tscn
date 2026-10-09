@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://rxtntyunak7c"]
 
-[ext_resource type="Texture2D" uid="uid://cbgr4xxdy06jk" path="res://brown-horse-run-gallop-isolated-png-2872242320.png" id="1_12aib"]
-[ext_resource type="Script" uid="uid://de6o001bgtvha" path="res://objects/Horse.cs" id="1_aqg8h"]
+[ext_resource type="Script" uid="uid://shflxta2y662" path="res://Scripts/Board/Piece.cs" id="1_8yyqj"]
+[ext_resource type="Texture2D" uid="uid://cbgr4xxdy06jk" path="res://knight.png" id="1_12aib"]
 
 [node name="Horse" type="Node2D" unique_id=861148446]
-script = ExtResource("1_aqg8h")
+script = ExtResource("1_8yyqj")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1726912467]
 scale = Vector2(0.05234375, 0.05807292)

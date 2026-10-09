@@ -1,14 +1,9 @@
 [gd_scene format=3 uid="uid://n085tornqdjj"]
 
-[ext_resource type="Script" uid="uid://darnf0rxl2os4" path="res://objects/Tile.cs" id="1_os0ok"]
+[ext_resource type="Script" uid="uid://yabtu1ijwf6s" path="res://Scripts/Board/Tile.cs" id="1_os0ok"]
 
 [node name="Tile" type="Node2D" unique_id=1177855444]
 script = ExtResource("1_os0ok")
-BaseColor = Color(1, 1, 1, 1)
-SelectColor = Color(0.26013774, 0.7659706, 0.4412638, 1)
-Fire = Color(0.9999998, 0.4372971, 0.22957194, 1)
-Blocked = Color(0.35531357, 0.35531357, 0.3553135, 1)
-tint = 0.15
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=699481359]
 offset_right = 40.0
@@ -21,5 +16,6 @@ color = Color(0.14710009, 0.22832128, 0.5413587, 1)
 offset_right = 40.0
 offset_bottom = 23.0
 
+[connection signal="gui_input" from="ColorRect" to="." method="OnPressed"]
 [connection signal="mouse_entered" from="ColorRect" to="." method="Selected"]
-[connection signal="mouse_exited" from="ColorRect" to="." method="Unselected"]
+[connection signal="mouse_exited" from="ColorRect" to="." method="Unseleceted"]

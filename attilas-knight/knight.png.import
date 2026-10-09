@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cbgr4xxdy06jk"
-path="res://.godot/imported/brown-horse-run-gallop-isolated-png-2872242320.png-aa2aad30e14e1064eaca47acdb76c03d.ctex"
+path="res://.godot/imported/knight.png-e78b6e5166df60917cb4b885a289c963.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://brown-horse-run-gallop-isolated-png-2872242320.png"
-dest_files=["res://.godot/imported/brown-horse-run-gallop-isolated-png-2872242320.png-aa2aad30e14e1064eaca47acdb76c03d.ctex"]
+source_file="res://knight.png"
+dest_files=["res://.godot/imported/knight.png-e78b6e5166df60917cb4b885a289c963.ctex"]
 
 [params]
 

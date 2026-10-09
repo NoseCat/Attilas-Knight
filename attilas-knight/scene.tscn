@@ -1,145 +1,130 @@
 [gd_scene format=3 uid="uid://b8sg4gni356ia"]
 
-[ext_resource type="Script" uid="uid://dkg05wvfj645h" path="res://scene.gd" id="1_nxogm"]
-[ext_resource type="PackedScene" uid="uid://ck24udt2ayume" path="res://objects/field.tscn" id="2_nxogm"]
-[ext_resource type="PackedScene" uid="uid://rxtntyunak7c" path="res://objects/horse.tscn" id="3_3253y"]
-[ext_resource type="PackedScene" uid="uid://dwgyaotcpxt01" path="res://objects/king.tscn" id="4_u3cyc"]
+[ext_resource type="Script" uid="uid://ckh80l5hx6kju" path="res://Scripts/Main.cs" id="1_u3cyc"]
+[ext_resource type="PackedScene" uid="uid://ck24udt2ayume" path="res://Scenes/field.tscn" id="2_u3cyc"]
+[ext_resource type="PackedScene" uid="uid://rxtntyunak7c" path="res://Scenes/horse.tscn" id="3_m7jmp"]
+[ext_resource type="PackedScene" uid="uid://dwgyaotcpxt01" path="res://Scenes/king.tscn" id="4_y2354"]
 
 [node name="Scene" type="Node2D" unique_id=388929535]
-script = ExtResource("1_nxogm")
+script = ExtResource("1_u3cyc")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1244582926]
 offset_right = 1163.0
 offset_bottom = 661.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
-color = Color(0.36078432, 0.2, 0.09019608, 1)
+color = Color(0.16862746, 0.16862746, 0.16862746, 1)
 
 [node name="FieldOrigin" type="Node2D" parent="." unique_id=1976101696]
-position = Vector2(236, 65)
+position = Vector2(296, 101)
 
 [node name="FieldEdge" type="Node2D" parent="FieldOrigin" unique_id=504208491]
-position = Vector2(811, 485)
+position = Vector2(500, 500)
 
-[node name="Field" parent="FieldOrigin" unique_id=880850480 instance=ExtResource("2_nxogm")]
+[node name="Field" parent="FieldOrigin" unique_id=880850480 instance=ExtResource("2_u3cyc")]
 
-[node name="Horse" parent="FieldOrigin" unique_id=861148446 instance=ExtResource("3_3253y")]
+[node name="Horse" parent="FieldOrigin" unique_id=861148446 instance=ExtResource("3_m7jmp")]
 
-[node name="King" parent="FieldOrigin" unique_id=1525262968 instance=ExtResource("4_u3cyc")]
+[node name="King" parent="FieldOrigin" unique_id=1525262968 instance=ExtResource("4_y2354")]
 
-[node name="Generate" type="Button" parent="." unique_id=1702187070]
-offset_left = 22.0
-offset_top = 166.0
-offset_right = 136.0
-offset_bottom = 197.0
-text = "Generate Fire"
-
-[node name="Label" type="Label" parent="." unique_id=1569589961]
-offset_left = 90.0
-offset_top = 136.0
-offset_right = 130.0
-offset_bottom = 159.0
-text = "seed"
+[node name="seedLabel" type="Label" parent="." unique_id=1569589961]
+offset_left = 18.0
+offset_top = 29.0
+offset_right = 58.0
+offset_bottom = 52.0
+text = "seed:"
 
 [node name="Seed" type="LineEdit" parent="." unique_id=206878879]
-offset_left = 16.0
-offset_top = 132.0
-offset_right = 84.5
-offset_bottom = 163.0
+offset_left = 61.0
+offset_top = 24.0
+offset_right = 129.5
+offset_bottom = 55.0
 text = "1"
 placeholder_text = "1"
 
-[node name="Label2" type="Label" parent="." unique_id=1070438907]
-offset_left = 90.0
-offset_top = 99.0
-offset_right = 130.0
-offset_bottom = 122.0
-text = "chance"
+[node name="firechanceLabel" type="Label" parent="." unique_id=1070438907]
+offset_left = 21.0
+offset_top = 70.0
+offset_right = 114.0
+offset_bottom = 93.0
+text = "Fire chance:"
 
-[node name="Chance" type="LineEdit" parent="." unique_id=1359420613]
-offset_left = 16.0
-offset_top = 96.0
-offset_right = 84.5
-offset_bottom = 127.0
+[node name="ChanceFire" type="LineEdit" parent="." unique_id=1359420613]
+offset_left = 126.0
+offset_top = 70.0
+offset_right = 194.5
+offset_bottom = 101.0
 text = "0.25"
 placeholder_text = "0.25"
 
 [node name="randSeed" type="Button" parent="." unique_id=688070049]
-offset_left = 137.0
-offset_top = 132.0
-offset_right = 222.0
-offset_bottom = 163.0
+offset_left = 136.0
+offset_top = 24.0
+offset_right = 221.0
+offset_bottom = 55.0
 text = "rand seed"
 
 [node name="X" type="LineEdit" parent="." unique_id=210373333]
-offset_left = 47.0
-offset_top = 239.0
-offset_right = 115.5
-offset_bottom = 270.0
-text = "15"
-placeholder_text = "15"
-
-[node name="Y" type="LineEdit" parent="." unique_id=1642292904]
-offset_left = 47.0
-offset_top = 279.0
-offset_right = 115.5
-offset_bottom = 310.0
+offset_left = 44.0
+offset_top = 108.0
+offset_right = 112.5
+offset_bottom = 139.0
 text = "10"
 placeholder_text = "10"
 
-[node name="Label3" type="Label" parent="." unique_id=1637290512]
-offset_left = 24.0
-offset_top = 240.0
-offset_right = 64.0
-offset_bottom = 263.0
+[node name="Y" type="LineEdit" parent="." unique_id=1642292904]
+offset_left = 46.0
+offset_top = 145.0
+offset_right = 114.5
+offset_bottom = 176.0
+text = "10"
+placeholder_text = "10"
+
+[node name="Xlabel" type="Label" parent="." unique_id=1637290512]
+offset_left = 21.0
+offset_top = 113.0
+offset_right = 61.0
+offset_bottom = 136.0
 text = "X:"
 
-[node name="Label4" type="Label" parent="." unique_id=883489462]
-offset_left = 26.0
-offset_top = 283.0
-offset_right = 66.0
-offset_bottom = 306.0
+[node name="Ylabel" type="Label" parent="." unique_id=883489462]
+offset_left = 21.0
+offset_top = 149.0
+offset_right = 57.0
+offset_bottom = 172.0
 text = "Y:"
 
-[node name="Create" type="Button" parent="." unique_id=2131613621]
+[node name="KnightManual" type="CheckBox" parent="." unique_id=127734595]
 offset_left = 31.0
-offset_top = 317.0
-offset_right = 129.0
-offset_bottom = 348.0
-text = "Create field"
-
-[node name="HorseManual" type="CheckBox" parent="." unique_id=127734595]
-offset_left = 31.0
-offset_top = 383.0
+offset_top = 304.0
 offset_right = 55.0
-offset_bottom = 407.0
+offset_bottom = 328.0
 
-[node name="Label5" type="Label" parent="." unique_id=1840819133]
+[node name="PlaceHOrse" type="Label" parent="." unique_id=1840819133]
 offset_left = 60.0
-offset_top = 383.0
+offset_top = 304.0
 offset_right = 149.0
-offset_bottom = 406.0
+offset_bottom = 327.0
 text = "Place horse"
 
 [node name="KingManual" type="CheckBox" parent="." unique_id=457130840]
+offset_left = 31.0
+offset_top = 336.0
+offset_right = 55.0
+offset_bottom = 360.0
+
+[node name="FireManual" type="CheckBox" parent="." unique_id=70534283]
 offset_left = 32.0
-offset_top = 450.0
+offset_top = 279.0
 offset_right = 56.0
-offset_bottom = 474.0
+offset_bottom = 303.0
 
-[node name="Label6" type="Label" parent="." unique_id=1182376235]
-offset_left = 61.0
-offset_top = 450.0
-offset_right = 150.0
-offset_bottom = 473.0
+[node name="PlaceKing" type="Label" parent="." unique_id=1182376235]
+offset_left = 60.0
+offset_top = 336.0
+offset_right = 149.0
+offset_bottom = 359.0
 text = "Place king"
-
-[node name="HorseRand" type="Button" parent="." unique_id=1937627923]
-offset_left = 39.0
-offset_top = 410.0
-offset_right = 177.0
-offset_bottom = 441.0
-text = "Place figs rand"
 
 [node name="KingRand" type="Button" parent="." unique_id=1360958752]
 visible = false
@@ -150,40 +135,92 @@ offset_bottom = 511.0
 text = "Place king rand"
 
 [node name="State" type="Label" parent="." unique_id=807154782]
-offset_left = 42.0
-offset_top = 503.0
-offset_right = 82.0
-offset_bottom = 526.0
+offset_left = 529.0
+offset_top = 11.0
+offset_right = 573.0
+offset_bottom = 34.0
 text = " none"
 
-[node name="SolveBfs" type="Button" parent="." unique_id=370598572]
-offset_left = 117.0
-offset_top = 552.0
-offset_right = 198.0
-offset_bottom = 583.0
+[node name="SolveBFS" type="Button" parent="." unique_id=370598572]
+offset_left = 833.0
+offset_top = 152.0
+offset_right = 914.0
+offset_bottom = 183.0
 text = "Solve BFS"
 
-[node name="SolveDfs" type="Button" parent="." unique_id=588867099]
-offset_left = 23.0
-offset_top = 555.0
-offset_right = 104.0
-offset_bottom = 586.0
+[node name="SolveDFS" type="Button" parent="." unique_id=588867099]
+offset_left = 831.0
+offset_top = 111.0
+offset_right = 914.0
+offset_bottom = 142.0
 text = "Solve DFS"
 
-[node name="set" type="Button" parent="." unique_id=858036709]
-offset_left = 167.0
-offset_top = 205.0
-offset_right = 200.0
-offset_bottom = 236.0
-text = "Set
+[node name="Generate" type="Button" parent="." unique_id=858036709]
+offset_left = 22.0
+offset_top = 191.0
+offset_right = 153.0
+offset_bottom = 222.0
+text = "Generate Board
 "
 
-[connection signal="pressed" from="Generate" to="." method="_on_generate_pressed"]
+[node name="Stats" type="Label" parent="." unique_id=1354080825]
+offset_left = 872.0
+offset_top = 226.0
+offset_right = 912.0
+offset_bottom = 249.0
+text = "Stats"
+
+[node name="PlaceFire" type="Label" parent="." unique_id=527813546]
+offset_left = 60.0
+offset_top = 278.0
+offset_right = 132.0
+offset_bottom = 301.0
+text = "Place fire"
+
+[node name="Back" type="Button" parent="." unique_id=290582375]
+offset_left = 318.0
+offset_top = 30.0
+offset_right = 363.0
+offset_bottom = 61.0
+text = "Go back a turn"
+
+[node name="Reset" type="Button" parent="." unique_id=856847111]
+offset_left = 453.0
+offset_top = 31.0
+offset_right = 504.0
+offset_bottom = 62.0
+text = "Reset"
+
+[node name="Save" type="Button" parent="." unique_id=283905927]
+offset_left = 22.0
+offset_top = 396.0
+offset_right = 66.0
+offset_bottom = 427.0
+text = "Save"
+
+[node name="Load" type="Button" parent="." unique_id=349151143]
+offset_left = 74.0
+offset_top = 395.0
+offset_right = 120.0
+offset_bottom = 426.0
+text = "Load"
+
+[node name="Animate" type="Button" parent="." unique_id=182217488]
+offset_left = 669.0
+offset_top = 30.0
+offset_right = 743.0
+offset_bottom = 61.0
+text = "Animate"
+
 [connection signal="pressed" from="randSeed" to="." method="_on_rand_seed_pressed"]
-[connection signal="pressed" from="Create" to="." method="_on_create_pressed"]
-[connection signal="toggled" from="HorseManual" to="." method="_on_horse_manual_toggled"]
+[connection signal="toggled" from="KnightManual" to="." method="_on_knight_manual_toggled"]
 [connection signal="toggled" from="KingManual" to="." method="_on_king_manual_toggled"]
-[connection signal="pressed" from="HorseRand" to="." method="_on_horse_rand_pressed"]
-[connection signal="pressed" from="SolveBfs" to="." method="_on_solve_bfs_pressed"]
-[connection signal="pressed" from="SolveDfs" to="." method="_on_solve_dfs_pressed"]
-[connection signal="pressed" from="set" to="." method="_on_set_pressed"]
+[connection signal="toggled" from="FireManual" to="." method="_on_fire_manual_toggled"]
+[connection signal="pressed" from="SolveBFS" to="." method="OnSolveBFSPressed"]
+[connection signal="pressed" from="SolveDFS" to="." method="OnSolveDFSPressed"]
+[connection signal="pressed" from="Generate" to="." method="OnGeneratePressed"]
+[connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Reset" to="." method="_on_reset_pressed"]
+[connection signal="pressed" from="Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Load" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="Animate" to="." method="_on_animate_pressed"]
