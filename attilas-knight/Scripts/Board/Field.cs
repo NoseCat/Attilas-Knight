@@ -169,7 +169,7 @@ public partial class Field : Node2D
 	{
 		SetKing(new Vector2I(x,y));
 	}
-	public void ShowPath(List<State> path) //rename
+	public void SetPath(List<State> path) //rename
 	{
 		Path = path;
 		knight.SetPos(path[path.Count - 1].Knight);
@@ -224,7 +224,7 @@ public partial class Field : Node2D
 
 		for (int i = 1; i < path.Count; i++)
 		{
-			await ToSignal(GetTree().CreateTimer(delay), SceneTreeTimer.SignalName.Timeout);
+			await ToSignal(GetTree().CreateTimer(	delay), SceneTreeTimer.SignalName.Timeout);
 
 			// abort if restarted, or if Reset/Create/Load/Back/a move changed Path meanwhile
 			if (id != animId || Path != original || Path.Count != path.Count)

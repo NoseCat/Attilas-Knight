@@ -17,6 +17,8 @@ public partial class Main : Node2D
 	FileDialog loadDialog;
 	const string SaveDir = "user://saves";
 
+	string stats = "";
+
 	public override void _Ready()
 	{
 		field = GetNode<Field>("FieldOrigin/Field");
@@ -50,6 +52,7 @@ public partial class Main : Node2D
 		stateLabel.Text = "Turn: " + field.Path.Count.ToString();
 		stateLabel.Text += "\n";
 		stateLabel.Text += "Solved: " + field.Path[field.Path.Count - 1].IsSolved();
+		GetNode<Label>("Stats").Text = stats;
 	}
 
 	//Buttons 
@@ -67,6 +70,8 @@ public partial class Main : Node2D
 		field.SetRandKing(rng);
 		field.SetRandOnFire(chance, rng);
 		field.Reset();
+
+		stats = "";
 	}
 
 	//Interaction
@@ -109,6 +114,7 @@ public partial class Main : Node2D
 	public void _on_reset_pressed()
 	{
 		field.Reset();
+		stats = "";
 	}
 	public void _on_animate_pressed() => field.Animate();
 
@@ -149,6 +155,7 @@ public partial class Main : Node2D
 		{
 			GD.PrintErr("Load failed: ", e.Message);
 		}
+		//stats = "";	
 	}
 
 	//solver
@@ -158,12 +165,16 @@ public partial class Main : Node2D
 	void Solve(string method)
 	{
 		var tree = new Solver().GetTree(method, field.BoardState);
+		stats = $"{method}\nIterations: {tree.Iterations}\n" +
+			$"Open: max {tree.MaxOpen}, at end {tree.OpenAtEnd}\n" +
+			$"Max stored (O+C): {tree.MaxStored}";
+		GD.Print(stats);
 		var path = tree.ShortestPathToSolved();
 		if (path == null)
 		{
 			GD.Print(method + ": no solution");
 			return;
 		}
-		field.ShowPath(path);
+		field.SetPath(path);
 	}
 }

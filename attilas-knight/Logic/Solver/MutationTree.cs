@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
-
+using System;
 public class MutationTree
 {
     public State Initial { get; }
@@ -9,6 +8,18 @@ public class MutationTree
     private readonly Dictionary<State, int> depth = new();
 
     public List<State> solved = new();
+
+    //stats
+    public int Iterations { get; set; } 
+    public int MaxOpen { get; private set; }
+    public int OpenAtEnd { get; set; }
+    public int MaxStored { get; private set; } 
+
+    public void TrackSize(int openCount)
+    {
+        MaxOpen = Math.Max(MaxOpen, openCount);
+        MaxStored = Math.Max(MaxStored, openCount + Iterations);
+    }
 
     public MutationTree(State initial)
     {

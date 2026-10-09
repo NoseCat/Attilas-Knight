@@ -24,6 +24,7 @@ public class Solver
         var tree = new MutationTree(initial);
         var queue = new Queue<State>();
         queue.Enqueue(initial);
+        tree.TrackSize(queue.Count); 
 
         while (queue.Count > 0)
         {
@@ -31,14 +32,19 @@ public class Solver
                 break;
 
             var cur = queue.Dequeue();
+            tree.Iterations++;
 
             foreach (var move in cur.getLegalMoves())
             {
                 var next = cur.moveKnight(move);
                 if (tree.Visit(cur, next)) //true if visited for the first time
+                {
                     queue.Enqueue(next);
+                    tree.TrackSize(queue.Count);
+                }
             }
         }
+        tree.OpenAtEnd = queue.Count;
         return tree;
     }
 
@@ -47,6 +53,7 @@ public class Solver
         var tree = new MutationTree(initial);
         var stack = new Stack<State>();
         stack.Push(initial);
+        tree.TrackSize(stack.Count); 
 
         while (stack.Count > 0)
         {
@@ -54,15 +61,19 @@ public class Solver
                 break;
 
             var cur = stack.Pop();
+            tree.Iterations++;
 
             foreach (var move in cur.getLegalMoves())
             {
                 var next = cur.moveKnight(move);
-
                 if (tree.Visit(cur, next))
+                {
                     stack.Push(next);
+                    tree.TrackSize(stack.Count); 
+                }
             }
         }
+        tree.OpenAtEnd = stack.Count;
         return tree;
     }
 }

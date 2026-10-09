@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://n085tornqdjj"]
 
-[ext_resource type="Script" uid="uid://yabtu1ijwf6s" path="res://Scripts/Board/Tile.cs" id="1_os0ok"]
+[ext_resource type="Script" uid="uid://yabtu1ijwf6s" path="res://Scripts/Board/Tile.cs" id="1_xsjyq"]
 
 [node name="Tile" type="Node2D" unique_id=1177855444]
-script = ExtResource("1_os0ok")
+script = ExtResource("1_xsjyq")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=699481359]
 offset_right = 40.0
