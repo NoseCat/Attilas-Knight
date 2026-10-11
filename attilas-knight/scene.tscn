@@ -135,25 +135,11 @@ offset_bottom = 511.0
 text = "Place king rand"
 
 [node name="State" type="Label" parent="." unique_id=807154782]
-offset_left = 529.0
-offset_top = 11.0
-offset_right = 573.0
-offset_bottom = 34.0
+offset_left = 517.0
+offset_top = 12.0
+offset_right = 561.0
+offset_bottom = 35.0
 text = " none"
-
-[node name="SolveBFS" type="Button" parent="." unique_id=370598572]
-offset_left = 833.0
-offset_top = 152.0
-offset_right = 914.0
-offset_bottom = 183.0
-text = "Solve BFS"
-
-[node name="SolveDFS" type="Button" parent="." unique_id=588867099]
-offset_left = 831.0
-offset_top = 111.0
-offset_right = 914.0
-offset_bottom = 142.0
-text = "Solve DFS"
 
 [node name="Generate" type="Button" parent="." unique_id=858036709]
 offset_left = 22.0
@@ -206,21 +192,57 @@ offset_bottom = 426.0
 text = "Load"
 
 [node name="Animate" type="Button" parent="." unique_id=182217488]
-offset_left = 669.0
+offset_left = 681.0
 offset_top = 30.0
-offset_right = 743.0
+offset_right = 755.0
 offset_bottom = 61.0
 text = "Animate"
+
+[node name="algoSelect" type="OptionButton" parent="." unique_id=1211742408]
+offset_left = 959.0
+offset_top = 95.0
+offset_right = 1039.0
+offset_bottom = 128.0
+
+[node name="heuristicSelect" type="OptionButton" parent="." unique_id=1405378190]
+offset_left = 958.0
+offset_top = 137.0
+offset_right = 1038.0
+offset_bottom = 170.0
+
+[node name="speedSlider" type="HSlider" parent="." unique_id=1081620482]
+offset_left = 763.0
+offset_top = 30.0
+offset_right = 925.0
+offset_bottom = 61.0
+min_value = 0.05
+max_value = 1.0
+step = 0.05
+value = 0.25
+
+[node name="speedLabel" type="Label" parent="." unique_id=16983289]
+offset_left = 764.0
+offset_top = 8.0
+offset_right = 816.0
+offset_bottom = 31.0
+text = "Speed:"
+
+[node name="Solve" type="Button" parent="." unique_id=1783329983]
+offset_left = 959.0
+offset_top = 58.0
+offset_right = 1008.0
+offset_bottom = 89.0
+text = "Solve"
 
 [connection signal="pressed" from="randSeed" to="." method="_on_rand_seed_pressed"]
 [connection signal="toggled" from="KnightManual" to="." method="_on_knight_manual_toggled"]
 [connection signal="toggled" from="KingManual" to="." method="_on_king_manual_toggled"]
 [connection signal="toggled" from="FireManual" to="." method="_on_fire_manual_toggled"]
-[connection signal="pressed" from="SolveBFS" to="." method="OnSolveBFSPressed"]
-[connection signal="pressed" from="SolveDFS" to="." method="OnSolveDFSPressed"]
 [connection signal="pressed" from="Generate" to="." method="OnGeneratePressed"]
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="Reset" to="." method="_on_reset_pressed"]
 [connection signal="pressed" from="Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="Load" to="." method="_on_load_pressed"]
 [connection signal="pressed" from="Animate" to="." method="_on_animate_pressed"]
+[connection signal="value_changed" from="speedSlider" to="." method="_on_speed_slider_value_changed"]
+[connection signal="pressed" from="Solve" to="." method="_on_solve_pressed"]

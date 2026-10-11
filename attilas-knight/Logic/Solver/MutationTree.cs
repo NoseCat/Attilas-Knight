@@ -10,16 +10,10 @@ public class MutationTree
     public List<State> solved = new();
 
     //stats
-    public int Iterations { get; set; } 
+    public int Iterations { get; private set; }
     public int MaxOpen { get; private set; }
-    public int OpenAtEnd { get; set; }
-    public int MaxStored { get; private set; } 
-
-    public void TrackSize(int openCount)
-    {
-        MaxOpen = Math.Max(MaxOpen, openCount);
-        MaxStored = Math.Max(MaxStored, openCount + Iterations);
-    }
+    public int MaxStored => depth.Count;
+    public int OpenAtEnd => depth.Count - Iterations;
 
     public MutationTree(State initial)
     {
@@ -30,18 +24,28 @@ public class MutationTree
 
     //building
 
+    private State lastParent;
     // Returns true if child is new.
     public bool Visit(State parent, State child)
     {
-        int d = depth[parent] + 1;
+        //if new parent
+        if (!ReferenceEquals(parent, lastParent))
+        {
+            lastParent = parent;
+            Iterations++;
+        }
 
-        //if new state
+        int d = depth[parent] + 1;
+ 
+        //if new state (child)
         if (!depth.TryGetValue(child, out int existingDepth))
         {
             depth[child] = d;
             parents[child] = new List<State> { parent };
             if (child.IsSolved())
                 solved.Add(child);
+
+            MaxOpen = Math.Max(MaxOpen, depth.Count - Iterations);
             return true;
         }
         //if not new
@@ -53,7 +57,6 @@ public class MutationTree
     }
 
     //queries
-
     public bool Contains(State s) => depth.ContainsKey(s);
 
     public int VisitedCount => depth.Count;

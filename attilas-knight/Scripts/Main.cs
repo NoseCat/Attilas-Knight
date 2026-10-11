@@ -6,7 +6,10 @@ public partial class Main : Node2D
 	Field field;
 	Label stateLabel;
 	LineEdit seedInput, chanceFireInput, xInput, yInput;
-
+	OptionButton algoSelect, heuristicSelect;
+	HSlider speedSlider;
+	Label speedLabel;
+	
 	// placement toggles
 	bool placeFire = false;
 	bool placeKnight = false;
@@ -22,11 +25,21 @@ public partial class Main : Node2D
 	public override void _Ready()
 	{
 		field = GetNode<Field>("FieldOrigin/Field");
-		stateLabel = GetNode<Label>("State");
+		
 		seedInput = GetNode<LineEdit>("Seed");
 		chanceFireInput = GetNode<LineEdit>("ChanceFire");
 		xInput = GetNode<LineEdit>("X");
 		yInput = GetNode<LineEdit>("Y");
+
+		algoSelect	= GetNode<OptionButton>("algoSelect");
+		foreach (var name in Solver.Algorithms.Keys) algoSelect.AddItem(name);
+		heuristicSelect = GetNode<OptionButton>("heuristicSelect");
+		foreach (var name in Heuristics.All.Keys) heuristicSelect.AddItem(name);
+
+		stateLabel = GetNode<Label>("State");
+		speedLabel = GetNode<Label>("speedLabel");
+		speedSlider = GetNode<HSlider>("speedSlider");
+		_on_speed_slider_value_changed((float)speedSlider.Value);
 
 		OnGeneratePressed();
 
@@ -34,7 +47,6 @@ public partial class Main : Node2D
 
 		//saveload
 		DirAccess.MakeDirRecursiveAbsolute(SaveDir);
-
 		loadDialog = new FileDialog
 		{
 			FileMode = FileDialog.FileModeEnum.OpenFile,
@@ -50,6 +62,8 @@ public partial class Main : Node2D
 	public override void _Process(double delta)
 	{
 		stateLabel.Text = "Turn: " + field.Path.Count.ToString();
+		stateLabel.Text += "\n";
+		stateLabel.Text += "King Reached: " + field.Path[field.Path.Count - 1].KingReached;
 		stateLabel.Text += "\n";
 		stateLabel.Text += "Solved: " + field.Path[field.Path.Count - 1].IsSolved();
 		GetNode<Label>("Stats").Text = stats;
@@ -111,6 +125,13 @@ public partial class Main : Node2D
 		field.ReverseLastMove();
 	}
 
+	void _on_speed_slider_value_changed(float value)
+	{
+		field.delay = 1.0f - value;
+		speedLabel.Text = "Anim Speed: " +  value.ToString();
+	}
+
+
 	public void _on_reset_pressed()
 	{
 		field.Reset();
@@ -158,9 +179,13 @@ public partial class Main : Node2D
 		//stats = "";	
 	}
 
+
 	//solver
-	void OnSolveBFSPressed() => Solve("BFS");
-	void OnSolveDFSPressed() => Solve("DFS");
+	void _on_solve_pressed()
+	{
+		Solver.SetHeuristic(heuristicSelect.GetItemText(heuristicSelect.Selected));
+		Solve(algoSelect.GetItemText(algoSelect.Selected));
+	}
 
 	void Solve(string method)
 	{

@@ -26,6 +26,11 @@ public partial class Tile : Node2D
 		label.Text = str;
 	}
 
+	public Color getColor()
+	{
+		return colorRect.Color;
+	}
+	
 	public void setColor(Color color)
 	{
 		colorRect.Color = color;
@@ -34,10 +39,14 @@ public partial class Tile : Node2D
 	public void Selected()
 	{
 		selected = true;
+
+		//GetNode<Field>("..").UpdateCellColors(); //Bad. we are updating the whole field for 2 squares at most
 	}
 	public void Unselected()
 	{
 		selected = false;
+
+		//GetNode<Field>("..").UpdateCellColors();
 	}
 
 	[Signal]

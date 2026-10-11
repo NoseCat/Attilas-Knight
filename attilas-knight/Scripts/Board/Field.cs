@@ -15,21 +15,22 @@ public partial class Field : Node2D
 	public Piece knight;
 	public Piece king;
 
-	static readonly Color ClearColor = new(0.85f, 0.85f, 0.80f);
-	static readonly float Tint = 0.25f;
-	static readonly Color FireColor = new(0.95f, 0.40f, 0.10f);
-	static readonly Color BlockedColor = new(0.25f, 0.25f, 0.28f);
-	static readonly Color LegalColor = new(0.2f, 0.9f, 0.3f, 0.45f);
-
+	public static readonly Color ClearColor = new(0.85f, 0.85f, 0.80f);
+	public static readonly float Tint = 0.25f;
+	public static readonly float SelectTint = 0.3f;
+	public static readonly Color FireColor = new(0.95f, 0.40f, 0.10f);
+	public static readonly Color BlockedColor = new(0.25f, 0.25f, 0.28f);
+	public static readonly Color LegalColor = new(0.2f, 0.9f, 0.3f, 0.45f);
+	public static readonly Color GoalColor = new(0.95f, 0.90f, 0.45f);
 
 	public override void _Ready()
 	{
-		_tileScene = GD.Load<PackedScene>("res://objects/tile.tscn");
+		_tileScene = GD.Load<PackedScene>("res://Scenes/tile.tscn");
 		knight = GetNode<Piece>("../Horse");
 		king = GetNode<Piece>("../King");
 	}
 
-//base
+	//base
 	public void Create(int size_x, int size_y)
 	{
 		Clear();
@@ -46,10 +47,10 @@ public partial class Field : Node2D
 				var tile = _tileScene.Instantiate<Tile>();
 				AddChild(tile);
 				tiles[x, y] = tile;
-				tile.Create(new Vector2I(x,y), TileSize);
+				tile.Create(new Vector2I(x, y), TileSize);
 				tile.Pressed += OnTilePressed;
 			}
-		
+
 		Reset();
 	}
 
@@ -75,41 +76,44 @@ public partial class Field : Node2D
 		UpdateCellColors();
 	}
 
-//Visual
+	//Visual
 	public void UpdateCellColors(State last = null)
-	{	
+	{
 		last ??= Path[Path.Count - 1];
 
-		//layer 1
+		//layer 1: Cells
 		for (int y = 0; y < BoardState.Size.Y; y++)
 			for (int x = 0; x < BoardState.Size.X; x++)
 			{
 				float curTint = 0f;
 				if ((x + y) % 2 == 0) curTint = Tint;
-				if(BoardState.Cells[x,y].Walkable)
-					tiles[x,y].setColor(ClearColor.Lerp(Colors.Black, curTint));
-				if(!BoardState.Cells[x,y].Walkable)
-					tiles[x,y].setColor(FireColor.Lerp(Colors.Black, curTint));
-				if(!last.Cells[x, y].Walkable && BoardState.Cells[x,y].Walkable)
-					tiles[x,y].setColor(BlockedColor.Lerp(Colors.Black, curTint));
+				if (BoardState.Cells[x, y].Walkable)
+					tiles[x, y].setColor(ClearColor.Lerp(Colors.Black, curTint));
+				if (!BoardState.Cells[x, y].Walkable)
+					tiles[x, y].setColor(FireColor.Lerp(Colors.Black, curTint));
+				if (!last.Cells[x, y].Walkable && BoardState.Cells[x, y].Walkable)
+					tiles[x, y].setColor(BlockedColor.Lerp(Colors.Black, curTint));
 			}
-		
-		//layer 2
-		foreach(Vector2I move in last.getLegalMoves())
-			tiles[move.X, move.Y].setColor(LegalColor);
 
-		//layer 3
+		//layer 2: QoL
+		if (!last.KingReached)
+			tiles[BoardState.King.X, BoardState.King.Y].setColor(GoalColor);
+		else
+			tiles[BoardState.Start.X, BoardState.Start.Y].setColor(GoalColor);
+		foreach (Vector2I move in last.getLegalMoves())
+			tiles[move.X, move.Y].setColor(LegalColor);
 		for (int y = 0; y < BoardState.Size.Y; y++)
 			for (int x = 0; x < BoardState.Size.X; x++)
 			{
-				//highlight selected if tiles[x,y].selected 
+				//highlight selected
+				// if (!tiles[x, y].selected) continue;
+				// Color c = tiles[x, y].getColor();
+				// Color lighter = c.Lerp(Colors.White, SelectTint);
+				// tiles[x, y].setColor(new Color(lighter.R, lighter.G, lighter.B, c.A));
 			}
 	}
 
-	// public override void _Process(double delta)
-	// {
-	// 	//do anim
-	// }
+	//public override void _Process(double delta)
 
 	//rands
 	public void SetRandOnFire(float chance, RandomNumberGenerator rng)
@@ -118,10 +122,10 @@ public partial class Field : Node2D
 			for (int x = 0; x < BoardState.Size.X; x++)
 				if (rng.RandiRange(0, 100) <= chance * 100) //100 should be rand precision
 				{
-					var pos = new Vector2I(x,y);
-					if(pos == BoardState.Knight || pos == BoardState.King)
+					var pos = new Vector2I(x, y);
+					if (pos == BoardState.Knight || pos == BoardState.King)
 						continue;
-					SetFire(x,y);
+					SetFire(x, y);
 				}
 	}
 
@@ -140,7 +144,7 @@ public partial class Field : Node2D
 		SetKing(x, y);
 	}
 
-//Helpers
+	//Helpers
 	public void SetFire(Vector2I pos)
 	{
 		BoardState.Cells[pos.X, pos.Y].Walkable = false;
@@ -148,17 +152,18 @@ public partial class Field : Node2D
 	}
 	public void SetFire(int x, int y)
 	{
-		SetFire(new Vector2I(x,y));
+		SetFire(new Vector2I(x, y));
 	}
 
 	public void SetKnight(Vector2I pos)
 	{
 		BoardState.Knight = pos;
+		BoardState.Start = pos;
 		Reset();
 	}
 	public void SetKnight(int x, int y)
 	{
-		SetKnight(new Vector2I(x,y));
+		SetKnight(new Vector2I(x, y));
 	}
 	public void SetKing(Vector2I pos)
 	{
@@ -167,7 +172,7 @@ public partial class Field : Node2D
 	}
 	public void SetKing(int x, int y)
 	{
-		SetKing(new Vector2I(x,y));
+		SetKing(new Vector2I(x, y));
 	}
 	public void SetPath(List<State> path) //rename
 	{
@@ -176,7 +181,7 @@ public partial class Field : Node2D
 		UpdateCellColors();
 	}
 
-//Knight Move
+	//Knight Move
 	public void KnightTryMove(Vector2I new_pos)
 	{
 		State last = Path[Path.Count - 1];
@@ -192,7 +197,7 @@ public partial class Field : Node2D
 	public void ReverseLastMove()
 	{
 		Path.RemoveAt(Path.Count - 1);
-		if(Path.Count <= 0)
+		if (Path.Count <= 0)
 		{
 			Reset();
 			return;
@@ -202,7 +207,7 @@ public partial class Field : Node2D
 		UpdateCellColors();
 	}
 
-//interaction
+	//interaction
 	[Signal]
 	public delegate void TilePressedEventHandler(Vector2I gridPos);
 	void OnTilePressed(Vector2I gridPos)
@@ -210,9 +215,9 @@ public partial class Field : Node2D
 		EmitSignal(SignalName.TilePressed, gridPos);
 	}
 
-// Animation
+	// Animation
 	int animId = 0;
-	[Export] float delay = 0.25f;
+	[Export] public float delay = 0.25f;
 	public async void Animate()
 	{
 		var original = Path;
@@ -224,7 +229,7 @@ public partial class Field : Node2D
 
 		for (int i = 1; i < path.Count; i++)
 		{
-			await ToSignal(GetTree().CreateTimer(	delay), SceneTreeTimer.SignalName.Timeout);
+			await ToSignal(GetTree().CreateTimer(delay), SceneTreeTimer.SignalName.Timeout);
 
 			// abort if restarted, or if Reset/Create/Load/Back/a move changed Path meanwhile
 			if (id != animId || Path != original || Path.Count != path.Count)
@@ -235,13 +240,14 @@ public partial class Field : Node2D
 		}
 	}
 
-//SaveLoad
+	//SaveLoad
 	public void LoadState(State loaded)
 	{
 		Create(loaded.Size.X, loaded.Size.Y);
 		BoardState.Cells = loaded.Cells;
 		BoardState.King = loaded.King;
 		BoardState.Knight = loaded.Knight;
+		BoardState.Start = loaded.Start;
 		Reset();
 	}
 

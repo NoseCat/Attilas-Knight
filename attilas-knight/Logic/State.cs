@@ -18,7 +18,7 @@ public struct Cell
 public class State
 {
     //static
-    public Vector2I Size {get; private set;}
+    public Vector2I Size {get; private set;} //techically a hack that is unnecesarry for the state, the fix is too complex to be worth it
     private static readonly Vector2I[] KnightMoves =
 	{
 		new Vector2I( 2,  1),
@@ -32,10 +32,11 @@ public class State
 	};
 
     //data
-	public Cell[,] Cells {get; set;}
-    //having King could be completely avoided because we are comparing 
-    public Vector2I King {get; set;} 
-    public Vector2I Knight {get; set;}
+	public Cell[,] Cells {get; set;} //dynamic
+    public Vector2I Knight {get; set;} //dynamic
+    public bool KingReached {get; set;} //dynamic, false by default
+    public Vector2I King {get; set;} //static
+    public Vector2I Start {get; set;} //static
 
     //base
     public State(Vector2I size)
@@ -44,6 +45,7 @@ public class State
         Cells = NewCells(size);
         King = new Vector2I(0,0);
         Knight = new Vector2I(0,0);
+        Start = Knight;
     }
     public State(Vector2I size, Vector2I king, Vector2I knight)
     {
@@ -51,6 +53,7 @@ public class State
         Cells = NewCells(size);
         King = king;
         Knight = knight;
+        Start = knight;
     }
 
     public State(State other)
@@ -59,6 +62,8 @@ public class State
         Cells = (Cell[,])other.Cells.Clone();
 		King = other.King;
         Knight = other.Knight;
+        Start = other.Start;
+        KingReached = other.KingReached;
     }
 
     public State Clone() => new State(this);
@@ -76,7 +81,8 @@ public class State
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
-        if (Knight != other.Knight || King != other.King || Size != other.Size)
+        if (Knight != other.Knight || KingReached != other.KingReached 
+        ||  Start != other.Start || King != other.King) //this line's comparisons are unnecessary for mutations
             return false;
 
         for (int x = 0; x < Size.X; x++)
@@ -91,6 +97,7 @@ public class State
     {
         var h = new HashCode();
         h.Add(Knight);
+        h.Add(KingReached);
         for (int x = 0; x < Size.X; x++)
             for (int y = 0; y < Size.Y; y++)
                 h.Add(Cells[x, y].Walkable);
@@ -106,6 +113,11 @@ public class State
         {
             newState.blockCell(from);
             newState.Knight = to;
+            if (to == King)
+            {
+                newState.KingReached = true;
+                newState.unblockCell(Start);
+            } 
         }
 
         return newState;
@@ -140,7 +152,7 @@ public class State
 
     public bool IsSolved()
     {
-        return Knight == King; 
+        return KingReached && Knight == Start;
     }
 
     //helper

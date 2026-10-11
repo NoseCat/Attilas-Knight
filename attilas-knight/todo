@@ -1,7 +1,13 @@
 
-Refactor Saveload
+Refactor Saveload !
 figure better save directory
 
 better anims
 
 refactor stats tracking
+
+figure a way to highlight squares
+
+getLast method for Field, also use it
+
+Solver should use new Heuristic dictionary instead and new method dicionary
