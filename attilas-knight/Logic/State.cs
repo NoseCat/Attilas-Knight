@@ -123,6 +123,16 @@ public class State
         return newState;
     }
 
+    public List<State> getMutations()
+    {
+        List<State> mutations = new();
+        foreach (var move in getLegalMoves())
+        {
+            mutations.Add(moveKnight(move));
+        }
+        return mutations;
+    }
+
     //checks
     private bool IsWalkable(Vector2I move)
     {
@@ -191,6 +201,12 @@ public class State
     private Cell getCell(int X, int Y)
     {
         return Cells[X, Y];
+    }
+
+    public Vector2I getGoal()
+    {
+        if(KingReached) return Start;
+        else return King;
     }
 
     //serialization

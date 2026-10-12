@@ -12,9 +12,9 @@ public static class Heuristics
     // h = 0
     public static int Zero(State s) => 0;
 
-    public static int Manhattan(State s)
+    public static int Manhattan(State s) //not exactly manhattan
     {
-        var d = (s.Knight - s.King).Abs();
+        var d = (s.Knight - s.getGoal()).Abs();
         return (int)Math.Ceiling((d.X + d.Y) / 3.0);
     }
 }

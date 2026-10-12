@@ -1,26 +1,19 @@
+//Algorithms contain a lot of repeating code, but I decided to leave it 
+//so its easy to see the difference
+
 using System;
 using System.Collections.Generic;
 
 public class Solver
 {
 
-    public MutationTree GetTree(string method, State initial)
+    public SearchTree GetTree(string method, State initial)
     {
         //if initial.IsSolved
         
-        switch (method)
-        {
-            case "BFS":
-                return BFS(initial);
-            case "DFS":
-                return DFS(initial);
-            case "Greedy":
-                return Greedy(initial);
-            case "Astar":
-                return Astar(initial);
-            default:
-                throw new ArgumentException("Unknown method: " + method);
-        }
+        if (!Algorithms.TryGetValue(method, out var algorithm))
+            throw new ArgumentException("Unknown method: " + method);
+        return algorithm(initial);
     }
 
 //Heuristics
@@ -28,28 +21,23 @@ public class Solver
 
     public static void SetHeuristic(string name)
     {
-        h = name switch
-        {
-            "Zero"      => Heuristics.Zero,
-            "Manhattan" => Heuristics.Manhattan,
-            _ => throw new ArgumentException("Unknown heuristic: " + name)
-        };
+        if (!Heuristics.All.TryGetValue(name, out var heuristic))
+            throw new ArgumentException("Unknown heuristic: " + name);
+        h = heuristic;
     }
     
 //Algorithms
-//Contain a lot of repeating code, but I decided to leave it so its easy to see the difference
-
-public static readonly Dictionary<string, Func<State, MutationTree>> Algorithms = new()
-{
-    ["BFS"]    = s => BFS(s),
-    ["DFS"]    = s => DFS(s),
-    ["Greedy"] = Greedy,
-    ["Astar"]     = Astar,
-};
-
-   public static MutationTree BFS(State initial, bool full = false)
+    public static readonly Dictionary<string, Func<State, SearchTree>> Algorithms = new()
     {
-        var tree = new MutationTree(initial);
+        ["BFS"]    = s => BFS(s),
+        ["DFS"]    = s => DFS(s),
+        ["Greedy"] = Greedy,
+        ["Astar"]     = Astar,
+    };
+
+   public static SearchTree BFS(State initial, bool full = false)
+    {
+        var tree = new SearchTree(initial);
         var queue = new Queue<State>();
         queue.Enqueue(initial);
 
@@ -58,19 +46,15 @@ public static readonly Dictionary<string, Func<State, MutationTree>> Algorithms 
             var cur = queue.Dequeue();
             if(cur.IsSolved() && !full) break;
 
-            foreach (var move in cur.getLegalMoves())
-            {
-                var next = cur.moveKnight(move);
-                if (tree.Visit(cur, next)) //true if visited for the first time
-                    queue.Enqueue(next);
-            }
+            foreach (var next in tree.Expand(cur))
+                queue.Enqueue(next);
         }
         return tree;
     }
 
-    public static MutationTree DFS(State initial, bool full = false)
+    public static SearchTree DFS(State initial, bool full = false)
     {
-        var tree = new MutationTree(initial);
+        var tree = new SearchTree(initial);
         var stack = new Stack<State>();
         stack.Push(initial);
 
@@ -80,19 +64,15 @@ public static readonly Dictionary<string, Func<State, MutationTree>> Algorithms 
         
             if(cur.IsSolved() && !full) break;
 
-            foreach (var move in cur.getLegalMoves())
-            {
-                var next = cur.moveKnight(move);
-                if (tree.Visit(cur, next))
-                    stack.Push(next);
-            }
+            foreach (var next in tree.Expand(cur))
+                stack.Push(next);
         }
         return tree;
     }   
     
-    public static MutationTree Greedy(State initial)
+    public static SearchTree Greedy(State initial)
     {
-        var tree = new MutationTree(initial);
+        var tree = new SearchTree(initial);
         var queue = new PriorityQueue<State, int>();
         queue.Enqueue(initial, h(initial));
 
@@ -101,22 +81,18 @@ public static readonly Dictionary<string, Func<State, MutationTree>> Algorithms 
             var cur = queue.Dequeue();
             if (cur.IsSolved()) break;
 
-            foreach (var move in cur.getLegalMoves())
+            foreach (var next in tree.Expand(cur))
             {
-                var next = cur.moveKnight(move);
-                if (tree.Visit(cur, next))
-                {
-                    int priority = h(next);
-                    queue.Enqueue(next, priority);
-                }
+                int priority = h(next);
+                queue.Enqueue(next, priority);
             }
         }
         return tree;
     }
 
-    public static MutationTree Astar(State initial)
+    public static SearchTree Astar(State initial)
     {
-        var tree = new MutationTree(initial);
+        var tree = new SearchTree(initial);
         var queue = new PriorityQueue<State, int>();
         queue.Enqueue(initial, h(initial) + 0); //g = 0 for initial
 
@@ -127,14 +103,10 @@ public static readonly Dictionary<string, Func<State, MutationTree>> Algorithms 
 
             var g = tree.DistanceTo(cur);
 
-            foreach (var move in cur.getLegalMoves())
+            foreach (var next in tree.Expand(cur))
             {
-                var next = cur.moveKnight(move);
-                if (tree.Visit(cur, next))
-                {
-                    int priority = h(next) + (g + 1);
-                    queue.Enqueue(next, priority);
-                }
+                int priority = h(next) + (g + 1);
+                queue.Enqueue(next, priority);
             }
         }
         return tree;

@@ -1,4 +1,5 @@
-using System.Runtime.Serialization;
+//Main is intentionally left messy, this is an interface interaction file
+
 using Godot;
 
 public partial class Main : Node2D
@@ -104,7 +105,6 @@ public partial class Main : Node2D
 	public void _on_fire_manual_toggled(bool toggled_on)
 	{
 		placeFire = toggled_on;
-		GD.Print(toggled_on);
 	}
 	public void _on_knight_manual_toggled(bool toggled_on)
 	{

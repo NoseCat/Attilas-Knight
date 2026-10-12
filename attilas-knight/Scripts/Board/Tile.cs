@@ -2,9 +2,9 @@ using Godot;
 public partial class Tile : Node2D
 {
 	public bool selected = false;
+	private Color color;
 
 	ColorRect colorRect;
-
 	Label label;
 
 	Vector2I GridPos = new Vector2I(0,0);
@@ -28,25 +28,25 @@ public partial class Tile : Node2D
 
 	public Color getColor()
 	{
-		return colorRect.Color;
+		return color;
 	}
 	
-	public void setColor(Color color)
+	public void setColor(Color color_)
 	{
+		color = color_;
 		colorRect.Color = color;
 	}
 
 	public void Selected()
 	{
 		selected = true;
-
-		//GetNode<Field>("..").UpdateCellColors(); //Bad. we are updating the whole field for 2 squares at most
+		Color lighter = color.Lerp(Colors.White, Field.SelectTint);
+		colorRect.Color = lighter; // hacky
 	}
 	public void Unselected()
 	{
 		selected = false;
-
-		//GetNode<Field>("..").UpdateCellColors();
+		setColor(color);
 	}
 
 	[Signal]

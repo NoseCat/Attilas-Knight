@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System;
-public class MutationTree
+public class SearchTree
 {
     public State Initial { get; }
 
@@ -15,26 +15,33 @@ public class MutationTree
     public int MaxStored => depth.Count;
     public int OpenAtEnd => depth.Count - Iterations;
 
-    public MutationTree(State initial)
+    public SearchTree(State initial)
     {
         Initial = initial;
         depth[initial] = 0;
         parents[initial] = new List<State>();
     }
 
-    //building
-
-    private State lastParent;
-    // Returns true if child is new.
-    public bool Visit(State parent, State child)
+//building
+    /// <summary>
+    /// Expands a state: returns every possible, yet unvisited state and
+    /// expands itslef with them
+    /// </summary>
+    public List<State> Expand(State parent)
     {
-        //if new parent
-        if (!ReferenceEquals(parent, lastParent))
-        {
-            lastParent = parent;
-            Iterations++;
-        }
+        Iterations++;
 
+        var fresh = new List<State>();
+        foreach (var child in parent.getMutations())
+        {
+            if (Visit(parent, child)) fresh.Add(child); // only newly discovered states
+        }
+        return fresh;
+    }
+
+    // Returns true if child is new.
+    private bool Visit(State parent, State child)
+    {
         int d = depth[parent] + 1;
  
         //if new state (child)
@@ -56,7 +63,7 @@ public class MutationTree
         return false;
     }
 
-    //queries
+//queries
     public bool Contains(State s) => depth.ContainsKey(s);
 
     public int VisitedCount => depth.Count;
