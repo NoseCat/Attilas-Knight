@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System;
+using System.Threading;
+using System.Diagnostics;
 public class SearchTree
 {
     public State Initial { get; }
@@ -9,11 +11,13 @@ public class SearchTree
 
     public List<State> solved = new();
 
+
     //stats
     public int Iterations { get; private set; }
     public int MaxOpen { get; private set; }
     public int MaxStored => depth.Count;
     public int OpenAtEnd => depth.Count - Iterations;
+    public Stopwatch timer = Stopwatch.StartNew();
 
     public SearchTree(State initial)
     {
@@ -102,5 +106,13 @@ public class SearchTree
         }
 
         return ShortestPathTo(Shortest);
+    }
+
+    public string getStats()
+    {
+        return $"Iterations: {Iterations}\n" +
+			$"Open: max {MaxOpen}, at end {OpenAtEnd}\n" +
+			$"Max stored (O+C): {MaxStored}\n" + 
+            $"Time (ms): {timer.ElapsedMilliseconds}";
     }
 }

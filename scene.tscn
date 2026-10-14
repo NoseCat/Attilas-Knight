@@ -234,6 +234,19 @@ offset_right = 1008.0
 offset_bottom = 89.0
 text = "Solve"
 
+[node name="ClearManual" type="CheckBox" parent="." unique_id=280559009]
+offset_left = 33.0
+offset_top = 367.0
+offset_right = 57.0
+offset_bottom = 391.0
+
+[node name="ClearManualLabel" type="Label" parent="." unique_id=1070115872]
+offset_left = 61.0
+offset_top = 366.0
+offset_right = 133.0
+offset_bottom = 389.0
+text = "Clear Tile"
+
 [connection signal="pressed" from="randSeed" to="." method="_on_rand_seed_pressed"]
 [connection signal="toggled" from="KnightManual" to="." method="_on_knight_manual_toggled"]
 [connection signal="toggled" from="KingManual" to="." method="_on_king_manual_toggled"]
@@ -246,3 +259,4 @@ text = "Solve"
 [connection signal="pressed" from="Animate" to="." method="_on_animate_pressed"]
 [connection signal="value_changed" from="speedSlider" to="." method="_on_speed_slider_value_changed"]
 [connection signal="pressed" from="Solve" to="." method="_on_solve_pressed"]
+[connection signal="toggled" from="ClearManual" to="." method="_on_clear_manual_toggled"]

@@ -15,7 +15,8 @@ public partial class Main : Node2D
 	bool placeFire = false;
 	bool placeKnight = false;
 	bool placeKing = false;
-	bool editMode => placeFire || placeKnight || placeKing;
+	bool placeClear = false;
+	bool editMode => placeFire || placeKnight || placeKing || placeClear;
 
 	//saveload
 	FileDialog loadDialog;
@@ -74,17 +75,11 @@ public partial class Main : Node2D
 	void OnGeneratePressed()
 	{
 		int seed = int.Parse(seedInput.Text);
-		var rng = new RandomNumberGenerator();
-		rng.Seed = (ulong)seed;
 		float chance = float.Parse(chanceFireInput.Text);
 		var X = int.Parse(xInput.Text);
 		var Y = int.Parse(yInput.Text);
 
-		field.Create(X, Y);
-		field.SetRandKnight(rng);
-		field.SetRandKing(rng);
-		field.SetRandOnFire(chance, rng);
-		field.Reset();
+		field.CreateRand(seed, X, Y, chance);
 
 		stats = "";
 	}
@@ -100,6 +95,8 @@ public partial class Main : Node2D
 			field.SetKnight(gridPos);
 		if (placeKing)
 			field.SetKing(gridPos);
+		if (placeClear)
+			field.SetClear(gridPos);
 	}
 
 	public void _on_fire_manual_toggled(bool toggled_on)
@@ -113,6 +110,11 @@ public partial class Main : Node2D
 	public void _on_king_manual_toggled(bool toggled_on)
 	{
 		placeKing = toggled_on;
+	}
+
+	public void _on_clear_manual_toggled(bool toggled_on)
+	{
+		placeClear = toggled_on;
 	}
 	public void _on_rand_seed_pressed()
 	{
@@ -190,9 +192,7 @@ public partial class Main : Node2D
 	void Solve(string method)
 	{
 		var tree = new Solver().GetTree(method, field.BoardState);
-		stats = $"{method}\nIterations: {tree.Iterations}\n" +
-			$"Open: max {tree.MaxOpen}, at end {tree.OpenAtEnd}\n" +
-			$"Max stored (O+C): {tree.MaxStored}";
+		stats = method + "\n" + tree.getStats();
 		GD.Print(stats);
 		var path = tree.ShortestPathToSolved();
 		if (path == null)

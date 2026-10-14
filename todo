@@ -3,9 +3,3 @@ Refactor Saveload !
 figure better save directory
 
 better anims
-
-refactor stats tracking
-
-Solver should use new Heuristic dictionary instead and new method dicionary
-
-random has off by 1 error

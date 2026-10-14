@@ -29,6 +29,14 @@ public partial class Field : Node2D
 		Reset();
 	}
 
+	public void CreateRand(int seed, int size_x, int size_y, float chance)
+	{
+		Clear();
+		BoardState = BoardGenerator.Generate(seed, size_x, size_y, chance);
+		CreateNodes();
+		Reset();
+	}
+
 	public void Reset()
 	{
 		Path = new List<State>();
@@ -42,36 +50,6 @@ public partial class Field : Node2D
 
 	//public override void _Process(double delta)
 
-	//rands
-	public void SetRandOnFire(float chance, RandomNumberGenerator rng)
-	{
-		for (int y = 0; y < BoardState.Size.Y; y++)
-			for (int x = 0; x < BoardState.Size.X; x++)
-				if (rng.RandiRange(0, 100) <= chance * 100) //100 should be rand precision
-				{
-					var pos = new Vector2I(x, y);
-					if (pos == BoardState.Knight || pos == BoardState.King)
-						continue;
-					SetFire(x, y, false);
-				}
-		Reset();
-	}
-
-	public void SetRandKnight(RandomNumberGenerator rng)
-	{
-		int x = rng.RandiRange(0, BoardState.Size.X - 1);
-		int y = rng.RandiRange(0, BoardState.Size.Y - 1);
-
-		SetKnight(x, y);
-	}
-	public void SetRandKing(RandomNumberGenerator rng)
-	{
-		int x = rng.RandiRange(0, BoardState.Size.X - 1);
-		int y = rng.RandiRange(0, BoardState.Size.Y - 1);
-
-		SetKing(x, y);
-	}
-
 	//Helpers
 	public void SetFire(Vector2I pos, bool reset = true)
 	{
@@ -80,7 +58,16 @@ public partial class Field : Node2D
 	}
 	public void SetFire(int x, int y, bool reset = true)
 	{
-		SetFire(new Vector2I(x, y));
+		SetFire(new Vector2I(x, y), reset);
+	}
+	public void SetClear(Vector2I pos)
+	{
+		BoardState.Cells[pos.X, pos.Y].Walkable = true;
+		Reset();
+	}
+	public void SetClear(int x, int y)
+	{
+		SetClear(new Vector2I(x, y));
 	}
 
 	public void SetKnight(Vector2I pos)
