@@ -12,6 +12,10 @@ public class SearchTree
     public List<State> solved = new();
 
 
+    //safety
+    public int MaxIterations = 1_000_000;
+    public bool Aborted { get; private set; }
+
     //stats
     public int Iterations { get; private set; }
     public int MaxOpen { get; private set; }
@@ -33,6 +37,7 @@ public class SearchTree
     /// </summary>
     public List<State> Expand(State parent)
     {
+        if (Iterations >= MaxIterations) { Aborted = true; return new List<State>(); }
         Iterations++;
 
         var fresh = new List<State>();

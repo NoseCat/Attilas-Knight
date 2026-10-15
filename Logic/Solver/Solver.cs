@@ -6,20 +6,19 @@ using System.Collections.Generic;
 
 public class Solver
 {
-
     public SearchTree GetTree(string method, State initial)
     {
         //if initial.IsSolved
         
         if (!Algorithms.TryGetValue(method, out var algorithm))
             throw new ArgumentException("Unknown method: " + method);
-        return algorithm(initial);
+        return algorithm(this, initial);
     }
 
 //Heuristics
-    public static Func<State, int> h = Heuristics.Zero;
+    public Func<State, int> h = Heuristics.Zero;
 
-    public static void SetHeuristic(string name)
+    public void SetHeuristic(string name)
     {
         if (!Heuristics.All.TryGetValue(name, out var heuristic))
             throw new ArgumentException("Unknown heuristic: " + name);
@@ -27,15 +26,15 @@ public class Solver
     }
     
 //Algorithms
-    public static readonly Dictionary<string, Func<State, SearchTree>> Algorithms = new()
+    public static readonly Dictionary<string, Func<Solver, State, SearchTree>> Algorithms = new()
     {
-        ["BFS"]    = s => BFS(s),
-        ["DFS"]    = s => DFS(s),
-        ["Greedy"] = Greedy,
-        ["Astar"]     = Astar,
+        ["BFS"]     = (solver, s) => solver.BFS(s),
+        ["DFS"]     = (solver, s) => solver.DFS(s),
+        ["Greedy"]  = (solver, s) => solver.Greedy(s),
+        ["Astar"]   = (solver, s) => solver.Astar(s),
     };
 
-   public static SearchTree BFS(State initial, bool full = false)
+    public SearchTree BFS(State initial, bool full = false)
     {
         var tree = new SearchTree(initial);
         var queue = new Queue<State>();
@@ -52,7 +51,7 @@ public class Solver
         return tree;
     }
 
-    public static SearchTree DFS(State initial, bool full = false)
+    public SearchTree DFS(State initial, bool full = false)
     {
         var tree = new SearchTree(initial);
         var stack = new Stack<State>();
@@ -70,7 +69,7 @@ public class Solver
         return tree;
     }   
     
-    public static SearchTree Greedy(State initial)
+    public SearchTree Greedy(State initial)
     {
         var tree = new SearchTree(initial);
         var queue = new PriorityQueue<State, int>();
@@ -90,7 +89,7 @@ public class Solver
         return tree;
     }
 
-    public static SearchTree Astar(State initial)
+    public SearchTree Astar(State initial)
     {
         var tree = new SearchTree(initial);
         var queue = new PriorityQueue<State, int>();

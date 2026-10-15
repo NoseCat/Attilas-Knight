@@ -20,7 +20,7 @@ public partial class Main : Node2D
 
 	//saveload
 	FileDialog loadDialog;
-	const string SaveDir = "user://saves";
+	const string SaveDir = "res://saves";
 
 	string stats = "";
 
@@ -185,13 +185,14 @@ public partial class Main : Node2D
 	//solver
 	void _on_solve_pressed()
 	{
-		Solver.SetHeuristic(heuristicSelect.GetItemText(heuristicSelect.Selected));
-		Solve(algoSelect.GetItemText(algoSelect.Selected));
+		Solve(algoSelect.GetItemText(algoSelect.Selected), heuristicSelect.GetItemText(heuristicSelect.Selected));
 	}
 
-	void Solve(string method)
+	void Solve(string method, string heuristic)
 	{
-		var tree = new Solver().GetTree(method, field.BoardState);
+		var solver = new Solver();
+		solver.SetHeuristic(heuristic);
+		var tree = solver.GetTree(method, field.BoardState);
 		stats = method + "\n" + tree.getStats();
 		GD.Print(stats);
 		var path = tree.ShortestPathToSolved();
@@ -201,5 +202,25 @@ public partial class Main : Node2D
 			return;
 		}
 		field.SetPath(path);
+	}
+
+	private bool _batchRunning;
+	private async void _on_run_tests_pressed()
+	{
+		var method = algoSelect.GetItemText(algoSelect.Selected);
+		var heuristic = heuristicSelect.GetItemText(heuristicSelect.Selected);
+		var count = int.Parse(GetNode<LineEdit>("Amount").Text);
+		var startSeed = int.Parse(seedInput.Text);
+		var width = int.Parse(xInput.Text);
+		var height = int.Parse(yInput.Text);
+		var fireChance = float.Parse(chanceFireInput.Text);
+
+		if (_batchRunning) return;
+		_batchRunning = true;
+
+		string path = await BatchTester.RunAsync(method, heuristic, count, startSeed,
+												width, height, fireChance);
+		GD.Print("Batch finished: ", path);
+		_batchRunning = false;
 	}
 }
